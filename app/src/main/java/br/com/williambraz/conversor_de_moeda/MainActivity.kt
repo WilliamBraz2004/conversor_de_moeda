@@ -11,6 +11,7 @@ import br.com.williambraz.conversor_de_moeda.repository.RateAPI
 
 class MainActivity : AppCompatActivity(), IObserver {
     private lateinit var binding: ActivityMainBinding
+    private lateinit var alert:AlertDialog
     private val euroPrice = Price()
     private val dollarPrice = Price()
 
@@ -23,22 +24,28 @@ class MainActivity : AppCompatActivity(), IObserver {
         binding.dollarPrice = dollarPrice
 
         binding.btnConvert.setOnClickListener{
+            alert = AlertDialog.Builder(this).create()
+            alert.setTitle("Aguarde...")
+            alert.setMessage("Estamos processando a conversão!!!")
+            alert.show()
+
             val rateAPI = RateAPI()
             rateAPI.getCurrency(applicationContext, this)
         }
     }
 
     override fun updateUI(data: MutableMap<String, Any>) {
-        val alert = AlertDialog.Builder(this)
-        alert.setTitle("Aguarde...")
-        alert.setMessage("Estamos processando a conversão!!!")
-        alert.show()
-
         if(data.isNotEmpty()){
-            val dollarValue = data["dollar"]
-            val euroValue = data["euro"]
+            val dollarValue = data["dollar"] as Double
+            val euroValue = data["euro"] as Double
 
-            val realValue = binding.txtReal.text.toString()
+            val realValue = binding.txtReal.text.toString().toDouble()
+
+            dollarPrice.setValue(realValue / dollarValue)
+            euroPrice.setValue(realValue / euroValue)
+
+            alert.dismiss()
+
         }
     }
 }

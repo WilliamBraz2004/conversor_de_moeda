@@ -11,7 +11,7 @@ import org.json.JSONObject
 class RateAPI {
     fun getCurrency(context: Context, observer: IObserver) {
         val queue = Volley.newRequestQueue(context)
-        val url = "https://api.hgbrasil.com/finance"
+        val url = "https://api.hgbrasil.com/finance?key=46a99c7d"
         val stringRequest = StringRequest(
             Request.Method.GET, url, {
 
